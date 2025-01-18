@@ -46,7 +46,7 @@ public class PlatformEnemySpawn : MonoBehaviour
             // Set the camera's new position
             if (cameraMover != null)
             {
-                cameraMover.SetTargetPosition(new Vector3(55f, 55f, -10f)); 
+                cameraMover.SetTargetPosition(new Vector3(100f, 55f, -10f)); 
             }
         }
             
