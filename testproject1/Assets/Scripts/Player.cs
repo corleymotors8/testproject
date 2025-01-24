@@ -5,8 +5,10 @@ public class Player : MonoBehaviour
    // Set the speed and jumping variables
    public float speed = 5.0f;
    public float jumpForce = 10.0f;
+   public CameraChildMover cameraChildMover;
    public float doubleJumpForce = 60.0f;
    private int jumpcount = 0;
+   private bool isGrounded = true;
 
    public GameObject playerPrefab; // Reference to the player prefab
    public float respawnYOffset = 300f; // Vertical offset for respawning above the platform
@@ -24,6 +26,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+         // Print player's vertical velocity and Y position
+        Debug.Log($"Player Velocity Y: {rb.linearVelocity.y}, Player Position Y: {transform.position.y}");
+         if (rb.linearVelocity.y < -10f && transform.position.y < -5f) // Adjust thresholds as needed
+        {
+            Debug.Log("Freefall detected!");
+            cameraChildMover.FreezeCamera(); // Detach the camera
+
+        }
         // Check if the player has fallen off the screen
         float bottomEdgeY = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0f, Camera.main.nearClipPlane)).y;
 
@@ -82,21 +92,37 @@ private void OnCollisionExit2D(Collision2D collision)
 /// ADD PLAYER DEATH LOGIC HERE
 
 
-    private void RespawnPlayerFall()
+private void RespawnPlayerFall()
 {
     if (lastPlatform != null) // Ensure the lastPlatform is valid
     {
-        // Calculate respawn position based on last platform
+        // Calculate respawn position
         Vector3 respawnPosition = lastPlatform.transform.position;
-        respawnPosition.y += 2f; // Add Y offset to respawn slightly above the platform
+        respawnPosition.y += 2f; // Add Y offset
 
         // Reposition the player
         transform.position = respawnPosition;
 
-        // Reset velocity to avoid residual motion
+        // Reset velocity and rotation
         rb.linearVelocity = Vector2.zero;
+        transform.rotation = Quaternion.identity; // Reset player rotation
 
-        Debug.Log("Player respawned at last platform: " + lastPlatform.name);
+        
+        // Temporarily detach the camera
+        Transform cameraTransform = Camera.main.transform;
+        cameraTransform.parent = null;
+
+        // Reset the camera position and rotation
+        cameraTransform.position = new Vector3(transform.position.x, transform.position.y, -10f);
+        cameraTransform.rotation = Quaternion.identity;
+
+        // Reattach the camera to the player
+        Debug.Log("Reattaching camera to the player...");
+        Camera.main.transform.parent = transform;
+
+        Debug.Log("Camera reattached. Current parent: " + Camera.main.transform.parent);
+
+        Debug.Log("Player respawned and camera reattached at last platform: " + lastPlatform.name);
     }
     else
     {
