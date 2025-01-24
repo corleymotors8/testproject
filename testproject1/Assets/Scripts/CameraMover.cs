@@ -7,34 +7,53 @@ using UnityEngine;
 
 public class CameraMover : MonoBehaviour
 {
+    public static CameraMover Instance;
+    private Camera mainCamera;
     public float panSpeed = 20f; // Speed for camera panning
     public Vector3 targetPosition;
     private bool shouldMove = false; // Flag to move the camera
 
-    void Update()
+   private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            mainCamera = Camera.main;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    
+    private void Update()
+    {
+        // Move the camera smoothly to the target position
         if (shouldMove)
         {
-            // Calculate the distance to move
-            Vector3 moveDirection = targetPosition - transform.position;
-            float distance = panSpeed * Time.deltaTime;
-
-            // Move the camera towards the target position
-            transform.position += moveDirection.normalized * distance;
+            Debug.Log($"Camera Position: {mainCamera.transform.position}, Target Position: {targetPosition}");
+            mainCamera.transform.position = Vector3.MoveTowards(
+                mainCamera.transform.position,
+                targetPosition,
+                panSpeed * Time.deltaTime
+            );
 
             // Stop moving if the camera reaches the target position
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+           if (Vector3.Distance(mainCamera.transform.position, targetPosition) < 0.1f)
             {
+                Debug.Log("Camera reached target position.");
+
                 shouldMove = false;
             }
         }
     }
-    public void SetTargetPosition(Vector3 newPosition)
+
+    public void MoveTo(Vector3 newTargetPosition)
     {
-        targetPosition = newPosition;
-        shouldMove = true; // Enable movement
-
+        targetPosition = newTargetPosition;
+        shouldMove = true;
     }
-
-
 }
+
+
+

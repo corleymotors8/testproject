@@ -73,6 +73,9 @@ private void OnCollisionExit2D(Collision2D collision)
     }
 }
 
+/// ADD PLAYER DEATH LOGIC HERE
+
+
     private void RespawnPlayer()
 {
     if (lastPlatform != null) // Ensure the lastPlatform is valid
