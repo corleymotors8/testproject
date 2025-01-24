@@ -324,13 +324,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168085171}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c3f054582d584d4393be8c0c908c3f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformMusic: {fileID: 8300000, guid: 851b5af3cc03e4c4a9493c97dc1ff631, type: 3}
-  centralAudioSource: {fileID: 2077104070}
+  platformMusic: {fileID: 0}
+  centralAudioSource: {fileID: 0}
 --- !u!114 &168085173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,11 +343,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde985bfdd5ff4496b0b573f9eb0fbce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpawner: {fileID: 0}
-  maxSpawns: 1
-  enemySpeed: 3
-  deathSound: {fileID: 8300000, guid: 9208335286d34482bb4f1efd5957a21c, type: 3}
-  cameraMover: {fileID: 0}
+  enemySpawner: {fileID: 364567951}
+  maxSpawns: 2
+  enemySpeed: 5
 --- !u!61 &168085174
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -689,7 +687,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panSpeed: 20
-  targetPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &602072339
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,7 +961,7 @@ GameObject:
   - component: {fileID: 709690324}
   - component: {fileID: 709690323}
   - component: {fileID: 709690321}
-  - component: {fileID: 709690327}
+  - component: {fileID: 709690328}
   m_Layer: 0
   m_Name: Platform6
   m_TagString: Ground
@@ -984,7 +981,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3f054582d584d4393be8c0c908c3f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformMusic: {fileID: 8300000, guid: 851b5af3cc03e4c4a9493c97dc1ff631, type: 3}
+  platformMusic: {fileID: 8300000, guid: 43243c1a3642b49198521356ff596406, type: 3}
   centralAudioSource: {fileID: 2077104070}
 --- !u!61 &709690323
 BoxCollider2D:
@@ -1129,7 +1126,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 774540145}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &709690327
+--- !u!114 &709690328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1138,9 +1135,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 709690320}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea2c14940f4274ffeacf08ca836c0377, type: 3}
+  m_Script: {fileID: 11500000, guid: 19b0fdf8d2c284315add3cb2fe22d153, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shouldFollowPlayer: 1
 --- !u!1 &774540144
 GameObject:
   m_ObjectHideFlags: 0
@@ -2186,8 +2184,6 @@ MonoBehaviour:
   enemySpawner: {fileID: 364567951}
   maxSpawns: 1
   enemySpeed: 5
-  deathSound: {fileID: 8300000, guid: 9208335286d34482bb4f1efd5957a21c, type: 3}
-  cameraMover: {fileID: 519420033}
 --- !u!114 &2004075847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2214,7 +2210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19b0fdf8d2c284315add3cb2fe22d153, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPosition: {x: 60, y: 33, z: -10}
+  shouldFollowPlayer: 0
 --- !u!1 &2072834666
 GameObject:
   m_ObjectHideFlags: 0
@@ -2629,13 +2625,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2988295281100197254, guid: 6dace721caa4243f787026af5158b110, type: 3}
+      propertyPath: doubleJumpForce
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 5107146435499068694, guid: 6dace721caa4243f787026af5158b110, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 23.9
+      value: 34.9
       objectReference: {fileID: 0}
     - target: {fileID: 5107146435499068694, guid: 6dace721caa4243f787026af5158b110, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 30.7
+      value: 46.2
       objectReference: {fileID: 0}
     - target: {fileID: 5107146435499068694, guid: 6dace721caa4243f787026af5158b110, type: 3}
       propertyPath: m_LocalPosition.z

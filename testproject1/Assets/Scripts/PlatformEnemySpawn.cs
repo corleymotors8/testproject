@@ -7,8 +7,6 @@ public class PlatformEnemySpawn : MonoBehaviour
     private int numberSpawns = 0; // Enemy spawn counter
     public int maxSpawns = 1; // Maximum number of enemy spawns
     public float enemySpeed = 5f; // Speed for the enemy
-    public AudioClip deathSound; // Death sound for the player
-    public CameraMover cameraMover; // Reference to the CameraMover script
 
     private AudioSource audioSource;
 

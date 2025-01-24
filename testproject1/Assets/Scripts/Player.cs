@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         {
         Debug.Log("Player fell off the screen!");
         Debug.Log("Falling off. Last platform: " + (lastPlatform != null ? lastPlatform.name : "null"));
-        RespawnPlayer();
+        RespawnPlayerFall();
         };
        
        // Input movement
@@ -64,6 +64,12 @@ public class Player : MonoBehaviour
         Debug.Log($"Last platform updated to: {lastPlatform.name}");
         jumpcount = 0;
     }
+    if (collision.gameObject.CompareTag("Enemy"))
+    {
+        Debug.Log("Player collided with enemy!");
+        // Respawn the player
+        RespawnPlayerCollideEnemy();
+    }
 }
 private void OnCollisionExit2D(Collision2D collision)
 {
@@ -76,7 +82,7 @@ private void OnCollisionExit2D(Collision2D collision)
 /// ADD PLAYER DEATH LOGIC HERE
 
 
-    private void RespawnPlayer()
+    private void RespawnPlayerFall()
 {
     if (lastPlatform != null) // Ensure the lastPlatform is valid
     {
@@ -97,4 +103,29 @@ private void OnCollisionExit2D(Collision2D collision)
         Debug.LogWarning("No platform available for respawn.");
     }
 }
+
+    private void RespawnPlayerCollideEnemy()
+    {
+        if (lastPlatform != null) // Ensure the lastPlatform is valid
+    {
+        // Calculate respawn position based on last platform
+        Vector3 respawnPosition = lastPlatform.transform.position;
+        respawnPosition.y += 30f; // Add Y offset to respawn slightly above the platform
+        respawnPosition.x += -25f; // Add X offset to respawn slightly to the left of last position
+        // Reposition the player
+        transform.position = respawnPosition;
+
+        // Reset velocity to avoid residual motion
+        rb.linearVelocity = Vector2.zero;
+
+        Debug.Log("Player respawned at last platform: " + lastPlatform.name);
+    }
+    else
+    {
+        Debug.LogWarning("No platform available for respawn.");
+    }
+        
+    }
+
+
 }

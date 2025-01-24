@@ -32,7 +32,7 @@
 //             // Use Vector3.Lerp for smooth movement
 //             Vector3 smoothedPosition = Vector3.Lerp(currentCameraPosition, targetCameraPosition, Time.deltaTime * cameraMover.panSpeed);
 
-//             CameraMover.Instance.MoveTo(targetPosition);
+//             CameraMover.Instance.MoveTo(newTargetPosition);
 //         }
 //     }
 // }

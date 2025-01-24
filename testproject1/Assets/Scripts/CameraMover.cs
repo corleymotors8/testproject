@@ -1,8 +1,3 @@
-// Main camera mover script
-// Uses SetTargetPosition to get a new target position and change shouldMove to true
-// Calculates the distance between the current position and the target position
-// Moves there at a speed set by panSpeed until it reaches the target position
-
 using UnityEngine;
 
 public class CameraMover : MonoBehaviour
@@ -10,50 +5,61 @@ public class CameraMover : MonoBehaviour
     public static CameraMover Instance;
     private Camera mainCamera;
     public float panSpeed = 20f; // Speed for camera panning
-    public Vector3 targetPosition;
-    private bool shouldMove = false; // Flag to move the camera
 
-   private void Awake()
+    private Transform playerTransform; // Reference to the player's transform
+    private Vector3 targetPosition;   // Current target position
+    private bool shouldFollowPlayer = false; // Whether the camera should follow the player
+
+    private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             mainCamera = Camera.main;
+
+            // Initialize targetPosition with the camera's starting position
+            targetPosition = mainCamera.transform.position;
         }
         else
         {
             Destroy(gameObject);
         }
     }
-    
+
+    private void Start()
+    {
+        // Automatically find the player
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
     private void Update()
     {
-        // Move the camera smoothly to the target position
-        if (shouldMove)
+        if (shouldFollowPlayer && playerTransform != null)
         {
-            Debug.Log($"Camera Position: {mainCamera.transform.position}, Target Position: {targetPosition}");
-            mainCamera.transform.position = Vector3.MoveTowards(
-                mainCamera.transform.position,
-                targetPosition,
-                panSpeed * Time.deltaTime
-            );
-
-            // Stop moving if the camera reaches the target position
-           if (Vector3.Distance(mainCamera.transform.position, targetPosition) < 0.1f)
-            {
-                Debug.Log("Camera reached target position.");
-
-                shouldMove = false;
-            }
+            // Continuously update the target position to follow the player
+            targetPosition = new Vector3(playerTransform.position.x, playerTransform.position.y, -10f); // Add Z offset
         }
+
+        // Smoothly move the camera to the target position
+        mainCamera.transform.position = Vector3.MoveTowards(
+            mainCamera.transform.position,
+            targetPosition,
+            panSpeed * Time.deltaTime
+        );
     }
 
-    public void MoveTo(Vector3 newTargetPosition)
+   public void MoveTo(Vector3 newTargetPosition)
+{
+    if (shouldFollowPlayer)
     {
+        // If the camera is set to follow the player, set targetPosition dynamically in Update
+        Debug.Log("Camera set to follow player.");
+    }
+    else
+    {
+        // Set a static target position
         targetPosition = newTargetPosition;
-        shouldMove = true;
+        Debug.Log($"Camera moving to static position: {targetPosition}");
     }
 }
-
-
-
+}
