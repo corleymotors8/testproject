@@ -1,3 +1,8 @@
+// Main camera mover script
+// Uses SetTargetPosition to get a new target position and change shouldMove to true
+// Calculates the distance between the current position and the target position
+// Moves there at a speed set by panSpeed until it reaches the target position
+
 using UnityEngine;
 
 public class CameraMover : MonoBehaviour

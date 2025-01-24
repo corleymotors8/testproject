@@ -53,14 +53,39 @@ public class PlatformEnemySpawn : MonoBehaviour
     }
     
 
-    private void OnEnemyCollisionWithPlayer(GameObject player)
+    public void OnEnemyCollisionWithPlayer(GameObject player, Collision2D collision)
+{
+    Debug.Log("Player collided with enemy: " + collision.gameObject.name);
+
+    if (collision.gameObject.CompareTag("Enemy"))
     {
-        if (audioSource != null && deathSound != null)
+        ContactPoint2D contact = collision.contacts[0];
+        Debug.Log("Collision point Y: " + contact.point.y + ", Enemy position Y: " + collision.gameObject.transform.position.y);
+
+        if (contact.point.y > collision.gameObject.transform.position.y + 0.1f)
         {
-            audioSource.PlayOneShot(deathSound); // Play the death sound
+            Debug.Log("Enemy stomped!");
+            Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
+            if (playerRb != null)
+            {
+                playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 10f); // Apply bounce
+            }
+
+            Destroy(collision.gameObject); // Destroy the enemy
         }
-        Destroy(player); // Destroy the player
+        else
+        {
+            Debug.Log("Player hit by enemy!");
+            if (audioSource != null && deathSound != null)
+            {
+                audioSource.PlayOneShot(deathSound); // Play the death sound
+            }
+
+            // Add your respawn logic here if needed
+        }
     }
+}
+}
 
     public class EnemyBehavior : MonoBehaviour
     {
@@ -89,8 +114,9 @@ public class PlatformEnemySpawn : MonoBehaviour
         {
             if (collision.gameObject.CompareTag("Player"))
             {
-                platformScript.OnEnemyCollisionWithPlayer(collision.gameObject); // Trigger player death logic
+                platformScript.OnEnemyCollisionWithPlayer(collision.gameObject, collision); // Trigger player death logic
             }
         }
     }
-}
+
+

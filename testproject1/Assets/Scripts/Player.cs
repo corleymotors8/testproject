@@ -2,14 +2,18 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-   // Set the speed variable
+   // Set the speed and jumping variables
    public float speed = 5.0f;
    public float jumpForce = 10.0f;
    public float doubleJumpForce = 60.0f;
    private int jumpcount = 0;
 
+   public GameObject playerPrefab; // Reference to the player prefab
+   public float respawnYOffset = 300f; // Vertical offset for respawning above the platform
+
    private Rigidbody2D rb;
-   private bool isGrounded = false;
+
+   private GameObject lastPlatform;
    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,6 +24,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Check if the player has fallen off the screen
+        float bottomEdgeY = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0f, Camera.main.nearClipPlane)).y;
+
+        if (transform.position.y < bottomEdgeY)
+        {
+        Debug.Log("Player fell off the screen!");
+        Debug.Log("Falling off. Last platform: " + (lastPlatform != null ? lastPlatform.name : "null"));
+        RespawnPlayer();
+        };
+       
+       // Input movement
         if (Input.GetKey(KeyCode.A))
         {
             transform.position += Vector3.left * speed * Time.deltaTime;
@@ -36,20 +51,47 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space) && jumpcount == 1)
         {
             rb.AddForce(Vector2.up * doubleJumpForce, ForceMode2D.Impulse);
-            jumpcount++;
-        }
-
-        {
-            isGrounded = false;
+            jumpcount = 2;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
+   {
+    if (collision.gameObject.CompareTag("Ground"))
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-            jumpcount = 0;
-        }
+        Debug.Log($"Collision ENTER detected with: {collision.gameObject.name}");
+        lastPlatform = collision.gameObject;
+        Debug.Log($"Last platform updated to: {lastPlatform.name}");
+        jumpcount = 0;
     }
+}
+private void OnCollisionExit2D(Collision2D collision)
+{
+    if (collision.gameObject.CompareTag("Ground"))
+    {
+        Debug.Log($"Collision EXIT detected with: {collision.gameObject.name}");
+    }
+}
+
+    private void RespawnPlayer()
+{
+    if (lastPlatform != null) // Ensure the lastPlatform is valid
+    {
+        // Calculate respawn position based on last platform
+        Vector3 respawnPosition = lastPlatform.transform.position;
+        respawnPosition.y += 2f; // Add Y offset to respawn slightly above the platform
+
+        // Reposition the player
+        transform.position = respawnPosition;
+
+        // Reset velocity to avoid residual motion
+        rb.linearVelocity = Vector2.zero;
+
+        Debug.Log("Player respawned at last platform: " + lastPlatform.name);
+    }
+    else
+    {
+        Debug.LogWarning("No platform available for respawn.");
+    }
+}
 }
